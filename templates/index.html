@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+{% block name %}
+{{ user[0]["firstname"] }}
+ {% endblock %}
+{% block main %}
+{% if message %}
+<p class="lead">{{ message }}</p>
+{% endif %}
+<div class="jumbotron">
+  <h1 class="display-4">WELCOME TO INDIAN RAILWAY</h1>
+</div>
+
+{% endblock %}
