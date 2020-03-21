@@ -3,6 +3,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import *
 
 app = Flask(__name__)
 
@@ -120,3 +121,53 @@ def logout():
     session.clear()
 
     return redirect("/")
+
+
+@app.route("/generate", methods=['GET', 'POST'])
+def generate():
+ 
+    if session.get("user_id") is None:
+        return redirect("/login")
+
+    user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
+    all_tickets = db.execute("SELECT * FROM tickets").fetchall()
+
+    if request.method == "POST":
+        if not request.form.get("from"):
+            return render_template("generate.html", user=user, all_tickets=all_tickets, message = "Source Missing")
+
+        if not request.form.get("to"):
+            return render_template("generate.html", user=user,all_tickets=all_tickets,  message="Destination Missing")
+
+        if request.form.get("from") == request.form.get("to"):
+            return render_template("generate.html", user=user,all_tickets=all_tickets,  message="Source and Destination can't be same")
+
+        if not request.form.get("num"):
+            return render_template("generate.html", user=user, all_tickets=all_tickets, message="Number of tickets Missing")
+
+        ticket = db.execute("SELECT * FROM tickets where from_city = :from_city AND to_city = :to_city", {'from_city': request.form.get("from"), 'to_city': request.form.get("to")}).fetchall()
+
+        if len(ticket) == 0:
+            return render_template("generate.html", user=user, all_tickets=all_tickets, message="No Train available")
+
+        total_cost = int(request.form.get("num")) * int(ticket[0]["cost"])
+        
+        time = ticket[0]["time"]
+
+        db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time")
+
+        return render_template("ticket", total_cost=total_cost, time=time,)
+
+        return render_template("generate.html", user=user)
+
+    else:
+
+        return render_template("generate.html", user=user, all_tickets=all_tickets)
+
+
+    
+    
+
+
+    
+

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Ticket
+{% endblock %}
+{% block name %}
+{{ user[0]["firstname"] }}
+ {% endblock %}
+{% block main %}
+    <div>
+      {% if message %}
+        <h3>{{ message }}</h3>
+      {% endif %}
+    </div>
+
+{% endblock %}

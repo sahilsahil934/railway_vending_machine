@@ -1,6 +1,6 @@
-ticket_id,from_city,to_city,cost
-1, Delhi, Jammu, 300
-2, Mumbai, Delhi, 800
-3, Jammu, Delhi, 300
-4, Amritsar, Chandigarh, 200
-5, Chennai, Delhi, 1200
+ticket_id,from_city,to_city, time,cost
+1, Delhi, Jammu, 6:00, 300
+2, Mumbai, Delhi, 7:00, 800
+3, Jammu, Delhi, 8:00, 300
+4, Amritsar, Chandigarh,9:00, 200
+5, Chennai, Delhi,10:00, 1200

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Generate Ticket
+{% endblock %}
+{% block name %}
+{{ user[0]["firstname"] }}
+ {% endblock %}
+{% block main %}
+    <div>
+      {% if message %}
+        <h3>{{ message }}</h3>
+      {% endif %}
+    </div>
+    {% if all_tickets %}
+    <form action="/generate" method="post">
+            <div class="form-group">
+                <select class="form-control" name="from" required>
+                    <option value="" selected disabled>From </option>
+                    {% for ticket in all_tickets %}
+                        <option value={{ ticket["from_city"] }}>{{ ticket["from_city"] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        <div class="form-group">
+            <select class="form-control" name="to" required>
+                <option value="" selected disabled>Destination</option>
+                    {% for ticket in all_tickets %}
+                        <option value={{ ticket["to_city"] }}>{{ ticket["to_city"] }}</option>
+                    {% endfor %}
+                </select>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num" placeholder="No of Tickets" type="number"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Generate Ticket</button>
+    </form>
+    {% else %}
+    <h2>Sorry! Please refrest the page</h2>
+    {% endif %}
+{% endblock %}
