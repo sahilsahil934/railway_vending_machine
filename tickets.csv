@@ -1,0 +1,6 @@
+ticket_id,from_city,to_city,cost
+1, Delhi, Jammu, 300
+2, Mumbai, Delhi, 800
+3, Jammu, Delhi, 300
+4, Amritsar, Chandigarh, 200
+5, Chennai, Delhi, 1200
