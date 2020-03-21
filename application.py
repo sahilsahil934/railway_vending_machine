@@ -152,13 +152,16 @@ def generate():
 
         total_cost = int(request.form.get("num")) * int(ticket[0]["cost"])
         
-        time = ticket[0]["time"]
+        train_time = ticket[0]["time"]
 
-        db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time")
+    
+        full_ticket = db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time)", {'user_id': int(session["user_id"]), 'from_city': request.form.get("from"), 'to_city': request.form.get('to'), 'passenger': int(request.form.get("num")), 'cost': total_cost, 'date': date.today(), 'time': train_time})
+                        
+        db.commit()
 
-        return render_template("ticket", total_cost=total_cost, time=time,)
+        print(full_ticket)
 
-        return render_template("generate.html", user=user)
+        return render_template("ticket.html", total_cost=total_cost, time=time, user=user)
 
     else:
 

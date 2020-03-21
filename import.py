@@ -12,7 +12,7 @@ def main():
     # Create table to import data into
     db.execute("CREATE TABLE tickets (id SERIAL PRIMARY KEY, ticket_id VARCHAR NOT NULL, from_city VARCHAR NOT NULL, to_city VARCHAR NOT NULL, time VARCHAR, cost FLOAT NOT NULL)")
     db.execute("CREATE TABLE users (user_id SERIAL PRIMARY KEY, firstname VARCHAR NOT NULL, lastname VARCHAR NOT NULL, username VARCHAR NOT NULL, password VARCHAR NOT NULL)")
-    db.execute("CREATE TABLE all_tickets (id SERIAL PRIMARY KEY,user_id INTERGER, from_city VARCHAR NOT NULL, to_city VARCHAR NOT NULL, passengers INTEGER, cost FLOAT NOT NULL, date VARCHAR NOT NULL, time VARCHAT NOT NULL)")
+    db.execute("CREATE TABLE all_tickets (id SERIAL PRIMARY KEY,user_id INTEGER, from_city VARCHAR NOT NULL, to_city VARCHAR NOT NULL, passengers INTEGER, cost FLOAT NOT NULL, date VARCHAR NOT NULL, time VARCHAR NOT NULL)")
 
     with open('tickets.csv', 'r') as ticket_csv:
         csv_reader = csv.reader(ticket_csv)
