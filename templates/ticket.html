@@ -26,12 +26,12 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>100</td>
-                    <td>Sahil</td>
-                    <td>11-10-2020</td>
-                    <td>11:00</td>
-                    <td>5</td>
-                    <td>5000</td>
+                    <td>{{ full_ticket["id"] }}</td>
+                    <td>{{ user[0]["firstname"] }}</td>
+                    <td>{{ full_ticket["date"] }}</td>
+                    <td>{{ full_ticket["time"] }}</td>
+                    <td>{{ full_ticket["passengers"] }}</td>
+                    <td>{{ full_ticket["cost"] }}</td>
                 </tr>
             </tbody>    
         </table>

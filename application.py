@@ -155,13 +155,15 @@ def generate():
         train_time = ticket[0]["time"]
 
     
-        full_ticket = db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time)", {'user_id': int(session["user_id"]), 'from_city': request.form.get("from"), 'to_city': request.form.get('to'), 'passenger': int(request.form.get("num")), 'cost': total_cost, 'date': date.today(), 'time': train_time})
+        db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time)", {'user_id': int(session["user_id"]), 'from_city': request.form.get("from"), 'to_city': request.form.get('to'), 'passenger': int(request.form.get("num")), 'cost': total_cost, 'date': date.today(), 'time': train_time})
                         
         db.commit()
 
+        full_ticket = db.execute("SELECT * FROM all_tickets WHERE id = (SELECT max(id) FROM all_tickets)").fetchone()
+
         print(full_ticket)
 
-        return render_template("ticket.html", total_cost=total_cost, time=time, user=user)
+        return render_template("ticket.html",user=user, full_ticket=full_ticket)
 
     else:
 
