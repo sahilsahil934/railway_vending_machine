@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Payment
+{% endblock %}
+{% block name %}
+{{ user[0]["firstname"] }}
+ {% endblock %}
+{% block main %}
+    <div>
+      {% if message %}
+        <h3>{{ message }}</h3>
+      {% endif %}
+    </div>
+    <form action="/payment" method="post">
+        <div class="form-group">
+            <input class="form-control" name="num2000"  placeholder="No of 2000 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num500" placeholder="No of 500 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num200" placeholder="No of 200 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num100" placeholder="No of 100 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num50" placeholder="No of 50 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num20" placeholder="No of 20 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num10" placeholder="No of 10 notes" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num5" placeholder="No of 5 coins" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num2" placeholder="No of 2 coins" type="number"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="num1" placeholder="No of 1 coins" type="number"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Pay</button>
+    </form>
+{% endblock %}

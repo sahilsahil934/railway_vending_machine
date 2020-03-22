@@ -159,7 +159,7 @@ def generate():
                         
         db.commit()
 
-        full_ticket = db.execute("SELECT * FROM all_tickets WHERE id = (SELECT max(id) FROM all_tickets)").fetchone()
+        return redirect('payment')
 
 
         return render_template("ticket.html",user=user, full_ticket=full_ticket)
@@ -174,6 +174,63 @@ def generate():
 
         return render_template("generate.html", user=user, from_l=from_l, to_l=to_l)
 
+
+@app.route('/payment', methods=["GET", "POST"])
+def payment():
+
+    if session.get("user_id") is None:
+        return redirect("/login")
+
+    user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
+
+    full_ticket = db.execute("SELECT * FROM all_tickets WHERE id = (SELECT max(id) FROM all_tickets)").fetchone()
+
+    total_cost = full_ticket["cost"]
+
+    if request.method == "POST":
+
+        total = 0
+        if request.form.get("num2000"):
+            total = total + (2000 * int(request.form.get("num2000")))
+
+        if request.form.get("num500"):
+            total = total + (500 * int(request.form.get("num500")))
+
+        if request.form.get("num200"):
+            total = total + (200 * int(request.form.get("num200")))
+
+        if request.form.get("num100"):
+            total = total + (100 * int(request.form.get("num100")))
+
+        if request.form.get("num50"):
+            total = total + (50 * int(request.form.get("num500")))
+
+        if request.form.get("num20"):
+            total = total + (20 * int(request.form.get("num20")))
+
+        if request.form.get("num10"):
+            total = total + (10 * int(request.form.get("num10")))
+
+        if request.form.get("num5"):
+            total = total + (5 * int(request.form.get("num5")))
+
+        if request.form.get("num2"):
+            total = total + (2 * int(request.form.get("num2")))
+
+        if request.form.get("num1"):
+            total = total + (1 * int(request.form.get("num1")))
+
+        returned = total - total_cost
+
+        db.execute("UPDATE all_tickets SET payment = :total, returned = :returned WHERE id = (SELECT max(id) FROM all_tickets)", {'total': total, 'returned': returned})
+
+        db.commit()
+
+        return redirect('/ticket')
+
+    else:
+
+        return render_template("payment.html", user=user, total_cost=total_cost)
 
     
     
