@@ -161,13 +161,18 @@ def generate():
 
         full_ticket = db.execute("SELECT * FROM all_tickets WHERE id = (SELECT max(id) FROM all_tickets)").fetchone()
 
-        print(full_ticket)
 
         return render_template("ticket.html",user=user, full_ticket=full_ticket)
 
     else:
 
-        return render_template("generate.html", user=user, all_tickets=all_tickets)
+        from_l = set()
+        to_l = set()
+        for i in all_tickets:
+            from_l.add(i["from_city"])
+            to_l.add(i["to_city"])
+
+        return render_template("generate.html", user=user, from_l=from_l, to_l=to_l)
 
 
     
