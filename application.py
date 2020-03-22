@@ -66,6 +66,8 @@ def login():
 
         session["user_id"] = row[0]["user_id"]
 
+        session["ticket"] = 0
+
         return redirect("/")
 
 
@@ -107,6 +109,8 @@ def register():
         session["user_id"] = row[0]["user_id"]
 
         db.commit()
+
+        session["ticket"] = 0
 
         return redirect("/")
 
@@ -159,10 +163,10 @@ def generate():
                         
         db.commit()
 
+        session["ticket"] = 1
+
         return redirect('payment')
 
-
-        return render_template("ticket.html",user=user, full_ticket=full_ticket)
 
     else:
 
@@ -180,6 +184,9 @@ def payment():
 
     if session.get("user_id") is None:
         return redirect("/login")
+
+    if session.get("ticket") == 0:
+        return redirect("/generate")
 
     user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
 
@@ -222,6 +229,12 @@ def payment():
 
         returned = total - total_cost
 
+        if returned < 0:
+
+            message = "You payed " + str(total) + " only, here is you money, Pleae pay again"
+
+            return render_template("payment.html", user=user, message=message, total_cost=total_cost)
+
         db.execute("UPDATE all_tickets SET payment = :total, returned = :returned WHERE id = (SELECT max(id) FROM all_tickets)", {'total': total, 'returned': returned})
 
         db.commit()
@@ -231,6 +244,84 @@ def payment():
     else:
 
         return render_template("payment.html", user=user, total_cost=total_cost)
+
+
+@app.route('/ticket')
+def ticket():
+
+    if session.get("user_id") is None:
+        return redirect("/login")
+
+    if session.get("ticket") == 0:
+        return redirect("/generate")
+
+    user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
+
+    full_ticket = db.execute("SELECT * FROM all_tickets WHERE id = (SELECT max(id) FROM all_tickets)").fetchone()
+
+    returned = full_ticket["returned"]
+
+    return_notes = dict()
+
+    if returned >= 2000:
+
+        return_notes["notes_2000"] = returned // 2000
+        returned = returned % 2000
+
+    if returned >= 500:
+
+        return_notes["notes_500"] = returned // 500
+        returned = returned % 500
+
+    if returned >= 200:
+
+        return_notes["notes_200"] = returned // 200
+        returned = returned % 200
+
+    if returned >= 100:
+
+        return_notes["notes_100"] = returned // 100
+        returned = returned % 100
+
+    if returned >= 50:
+
+        return_notes["notes_50"] = returned // 50
+        returned = returned % 50
+
+    if returned >= 20:
+
+        return_notes["notes_20"] = returned // 20
+        returned = returned % 20
+
+
+    if returned >= 10:
+
+        return_notes["notes_10"] = returned // 10
+        returned = returned % 10
+
+    if returned >= 5:
+
+        return_notes["coin_5"] = returned // 5
+        returned = returned % 5
+
+    if returned >= 2:
+
+        return_notes["coin2_2"] = returned // 2
+        returned = returned % 2
+
+    if returned >= 1:
+
+        return_notes["coin_1"] = returned // 1
+        returned = returned % 1
+
+    session["ticket"] = 0
+
+    db.execute("UPDATE all_tickets SET payed = :value WHERE id = (SELECT max(id) FROM all_tickets)", {'value': 1})
+    db.commit()
+
+    return render_template("ticket.html", user=user, return_notes=return_notes, full_ticket=full_ticket)
+
+        
 
     
     

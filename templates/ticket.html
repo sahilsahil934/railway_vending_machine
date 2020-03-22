@@ -13,7 +13,7 @@
       {% endif %}
     </div>
     <div class="jumbotron">
-        <center>INDIAN RAILWAY</center>
+        <center><h2>INDIAN RAILWAY</h2></center>
         <table class="table">
             <thead class="head-light">
                 <tr>
@@ -33,6 +33,29 @@
                     <td>{{ full_ticket["time"] }}</td>
                     <td>{{ full_ticket["passengers"] }}</td>
                     <td>{{ full_ticket["cost"] }}</td>
+                </tr>
+            </tbody>    
+        </table>
+    </div>
+    <div>
+        <p>Payed: {{ full_ticket["payment"] }}</p>
+        <p>Returned: {{ full_ticket["returned"] }}</p>
+    </div>
+    <div>
+        <h3>Returning</h3>
+        <table class="table">
+            <thead class="head-light">
+                <tr>
+                {% for keys in return_notes %}
+                    <th scope="col">{{ keys }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for keys in return_notes %}
+                        <td>{{ return_notes[keys] }}</td>
+                    {% endfor %}
                 </tr>
             </tbody>    
         </table>

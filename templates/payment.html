@@ -12,6 +12,7 @@
         <h3>{{ message }}</h3>
       {% endif %}
     </div>
+    <h2> Money to pay: {{ total_cost }}</h2>
     <form action="/payment" method="post">
         <div class="form-group">
             <input class="form-control" name="num2000"  placeholder="No of 2000 notes" type="number"/>
