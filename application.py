@@ -35,6 +35,10 @@ def index():
 
     user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
 
+    db.execute("DELETE FROM all_tickets WHERE user_id = :user_id AND payed = :payed" ,{'user_id': int(session["user_id"]), 'payed': 0})
+
+    db.commit()
+
     if len(user) != 0:
 
         return render_template("index.html", user = user)
@@ -159,7 +163,7 @@ def generate():
         train_time = ticket[0]["time"]
 
     
-        db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time)", {'user_id': int(session["user_id"]), 'from_city': request.form.get("from"), 'to_city': request.form.get('to'), 'passenger': int(request.form.get("num")), 'cost': total_cost, 'date': date.today(), 'time': train_time})
+        db.execute("INSERT INTO all_tickets (user_id, from_city, to_city, passengers, cost, date, time, payed) VALUES(:user_id, :from_city, :to_city, :passenger, :cost, :date, :time, :payed)", {'user_id': int(session["user_id"]), 'from_city': request.form.get("from"), 'to_city': request.form.get('to'), 'passenger': int(request.form.get("num")), 'cost': total_cost, 'date': date.today(), 'time': train_time, 'payed': 0 })
                         
         db.commit()
 
