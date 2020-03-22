@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, redirect, request
+from flask import Flask, session, render_template, redirect, request, flash
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -327,9 +327,40 @@ def ticket():
 
         
 
-    
-    
+@app.route("/password", methods=["GET", "POST"])
+def password():
 
+    if session.get("user_id") is None:
+        return redirect("/login")
 
-    
+    user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
+
+    if request.method == "GET":
+
+        return render_template("password.html", user=user)
+
+    else:
+
+        if not request.form.get("old"):
+            return render_template("password.html", message="Missing Old Password", user=user)
+
+        elif not request.form.get("password"):
+            return render_template("password.html", message="Missing new password", user=user)
+
+        elif request.form.get("confirmation") != request.form.get("password"):
+            return render_template("password.html", message="Password don't Match", user=user)
+
+        rows = db.execute("SELECT * FROM users WHERE user_id = :user_id", {'user_id':session["user_id"]}).fetchall()
+
+        if not check_password_hash(rows[0]["password"], request.form.get("old")):
+            return render_template("password.html", message="Wrong old Password", user=user)
+
+        else:
+            db.execute("UPDATE users SET password = :hash WHERE user_id = :user_id",
+                       {'user_id':session["user_id"],
+                       'hash':generate_password_hash(request.form.get("password"), method='pbkdf2:sha256', salt_length=8)})
+
+            db.commit()
+        flash("Password Changed")
+        return redirect('/index')
 
