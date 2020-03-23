@@ -368,6 +368,9 @@ def password():
 @app.route("/search", methods=["GET", "POST"])
 def search():
 
+    if session.get("user_id") is None:
+        return redirect("/login")
+
     if request.method == "GET":
 
         return redirect("/")
@@ -385,3 +388,22 @@ def search():
             return render_template("search.html", rows=rows, search=request.form.get("search"), user=user)
         else:
             return render_template("search.html", search=request.form.get("search"), user=user)
+
+
+@app.route("/previous")
+def previous():
+
+    if session.get("user_id") is None:
+        return redirect("/login")
+
+    user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
+
+    rows = db.execute("SELECT * FROM all_tickets WHERE user_id = :user AND payed = :payed" ,{'user': int(session["user_id"]), 'payed': 1}).fetchall()
+
+    if len(rows) != 0:
+
+        return render_template("previous.html", user=user, rows=rows)
+
+    else:
+
+        return render_template("previous.html", user=user)

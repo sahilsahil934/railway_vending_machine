@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    All Tickets
+{% endblock %}
+{% block name %}
+{{ user[0]["firstname"] }}
+ {% endblock %}
+{% block main %}
+{% if rows %}
+  <div>
+      <h2>List of all your ever ticket</h2>
+    <table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">TIcket Id</th>
+      <th scope="col">From</th>
+      <th scope="col">Destination</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Number of tickets</th>
+      <th scope="col">Cost</th>
+      <th scope="col">Money payed</th>
+      <th scope="col">Money returned</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in rows %}
+      <tr>  
+        <td>{{ i["id"] }}</td>
+        <td>{{ i["from_city"] }}</td>
+        <td>{{ i["to_city"] }}</td>
+        <td>{{ i["date"] }}</td>
+        <td>{{ i["time"] }}</td>
+        <td>{{ i["passengers"] }}</td>
+        <td>{{ i["cost"] }}</td>
+        <td>{{ i["payment"] }}</td>
+        <td>{{ i["returned"] }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+  </div>
+{% else %}
+<div class="jumbotron">
+  <h1 class="display-4">You never booked a ticket</h1>
+</div>
+{% endif %}
+{% endblock %}
