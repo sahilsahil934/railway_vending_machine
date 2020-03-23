@@ -364,3 +364,24 @@ def password():
         flash("Password Changed")
         return redirect('/index')
 
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+
+    if request.method == "GET":
+
+        return redirect("/")
+
+    else:
+
+        user = db.execute("SELECT * FROM users WHERE user_id = :user", {'user': int(session["user_id"])}).fetchall()
+
+        if not request.form.get("search"):
+            return redirect("/")
+
+        rows = db.execute("SELECT * FROM tickets WHERE from_City LIKE :search", {'search': '%' + request.form.get("search").capitalize() + '%'}).fetchall()
+
+        if rows != 0:
+            return render_template("search.html", rows=rows, search=request.form.get("search"), user=user)
+        else:
+            return render_template("search.html", search=request.form.get("search"), user=user)
